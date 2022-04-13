@@ -44,8 +44,7 @@ const Me: NextPage = () => {
 
   return (
     <div className="min-h-screen  bg-gradient-to-br from-purple-500 to-purple-800">
-      <div className="container max-w-2xl mx-auto p-12">
-        <h1 className="text-4xl font-bold mb-8 text-white">My Profile</h1>
+      <div className="container max-w-2xl mx-auto pt-32">
         <div className="p-16 bg-white rounded shadow-2xl">
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>

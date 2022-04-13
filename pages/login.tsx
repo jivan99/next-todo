@@ -1,9 +1,8 @@
-import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { login } from "../lib/mutations";
-import { ChangeEvent, FormEventHandler, useState } from "react";
+import { ChangeEvent, FormEventHandler, ReactElement, useState } from "react";
 
-const Login: NextPage = () => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -63,5 +62,7 @@ const Login: NextPage = () => {
     </div>
   );
 };
+
+Login.authPage = true;
 
 export default Login;
