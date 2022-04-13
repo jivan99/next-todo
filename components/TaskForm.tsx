@@ -15,6 +15,7 @@ const TaskForm = ({ fetchTodos }: Props) => {
     fetcher("/tasks", "POST", { description, completed: false })
       .then(() => {
         setIsProcessing(false);
+        setDescription("");
         fetchTodos();
       })
       .catch((error) => {
