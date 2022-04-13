@@ -48,9 +48,7 @@ const handler: NextApiHandler = (req: NextApiRequest, res: NextApiResponse) => {
       task.description = description;
     }
 
-    if (completed) {
-      task.completed = completed;
-    }
+    task.completed = !!completed;
 
     const updatedTasksData = JSON.stringify(tasks);
 
