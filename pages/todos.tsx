@@ -1,21 +1,32 @@
 import type { NextPage } from "next";
-import { useGetTasks } from "../lib/hooks";
 
 import Task from "../components/Task";
 import TaskForm from "../components/TaskForm";
+import { useEffect, useState } from "react";
+import fetcher from "../lib/fetcher";
 
 const Home: NextPage = () => {
-  const { tasks } = useGetTasks();
+  const [todos, setTodos] = useState([]);
+
+  useEffect(() => {
+    fetchTodos();
+  }, []);
+
+  const fetchTodos = () => {
+    fetcher("/tasks", "GET").then((res) => {
+      setTodos(res.data);
+    });
+  };
 
   return (
     <div className="min-h-screen  bg-gradient-to-br from-purple-500 to-purple-800">
       <div className="container max-w-2xl mx-auto p-12">
         <h1 className="text-4xl font-bold mb-8 text-white">My Todos</h1>
         <div className="p-12 bg-white rounded shadow-2xl">
-          <TaskForm />
+          <TaskForm fetchTodos={fetchTodos} />
           <div className="space-y-4">
-            {tasks?.map((task) => {
-              return <Task key={task.id} task={task} />;
+            {todos?.map((task) => {
+              return <Task key={task.id} task={task} fetchTodos={fetchTodos} />;
             })}
           </div>
         </div>

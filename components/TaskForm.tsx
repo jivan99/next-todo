@@ -1,7 +1,11 @@
 import { ChangeEvent, FormEventHandler, useState } from "react";
 import fetcher from "../lib/fetcher";
 
-const TaskForm = () => {
+type Props = {
+  fetchTodos: () => void;
+};
+
+const TaskForm = ({ fetchTodos }: Props) => {
   const [description, setDescription] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -11,6 +15,7 @@ const TaskForm = () => {
     fetcher("/tasks", "POST", { description, completed: false })
       .then(() => {
         setIsProcessing(false);
+        fetchTodos();
       })
       .catch((error) => {
         setIsProcessing(false);

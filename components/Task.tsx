@@ -5,14 +5,16 @@ import fetcher from "../lib/fetcher";
 
 type Props = {
   task: Task;
+  fetchTodos: () => void;
 };
 
-const Task = ({ task }: Props) => {
+const Task = ({ task, fetchTodos }: Props) => {
   const { id, description, completed } = task;
   const [checked, setChecked] = useState(completed);
 
   const handleDelete = () => {
     fetcher(`/tasks/${id}`, "DELETE");
+    fetchTodos();
   };
 
   const handleUpdate = (completed: boolean) => {
