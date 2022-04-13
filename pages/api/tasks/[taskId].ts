@@ -13,7 +13,7 @@ const handler: NextApiHandler = (req: NextApiRequest, res: NextApiResponse) => {
   ) {
     return res.status(400).json({
       status: "fail",
-      message: "Only GET & POST is allowed!",
+      message: "Only GET, PATCH, & DELETE is allowed!",
     });
   }
 
@@ -67,7 +67,7 @@ const handler: NextApiHandler = (req: NextApiRequest, res: NextApiResponse) => {
     tasks = tasks.filter((t: Task) => t.id !== task.id);
     fs.writeFileSync("database/tasks.json", JSON.stringify(tasks));
 
-    res.status(204).json({
+    res.status(202).json({
       status: "success",
       data: null,
     });
