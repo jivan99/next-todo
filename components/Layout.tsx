@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ReactChild } from "react";
+import fetcher from "../lib/fetcher";
 
 type Props = {
   children: ReactChild;
@@ -8,6 +9,12 @@ type Props = {
 
 const Layout = ({ children }: Props) => {
   const router = useRouter();
+
+  const logout = () => {
+    fetcher("/logout", "POST").then(() => {
+      location.reload();
+    });
+  };
 
   return (
     <>
@@ -48,7 +55,10 @@ const Layout = ({ children }: Props) => {
               </a>
             </Link>
           </div>
-          <button className="inline-block px-6 py-2 bg-yellow-500 text-yellow-900 rounded">
+          <button
+            onClick={logout}
+            className="inline-block px-6 py-2 bg-yellow-500 text-yellow-900 rounded"
+          >
             Logout
           </button>
         </div>
