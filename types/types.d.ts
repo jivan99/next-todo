@@ -1,11 +1,17 @@
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 
-type User = {
+export type User = {
   id: string;
   email: string;
   password: string;
 };
 
-type NextApiRequestWithUser = NextApiRequest & {
+export type NextApiRequestWithUser = NextApiRequest & {
   user?: User;
+};
+
+export type Task = {
+  id: string;
+  description: string;
+  completed: boolean;
 };

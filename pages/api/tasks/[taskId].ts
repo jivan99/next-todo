@@ -3,11 +3,7 @@ import fs from "fs";
 
 import protectRoute from "../../../middleware/protectRoute";
 
-type Task = {
-  id: string;
-  description: string;
-  completed: boolean;
-};
+import { Task } from "../../../types/types";
 
 const handler: NextApiHandler = (req: NextApiRequest, res: NextApiResponse) => {
   if (
