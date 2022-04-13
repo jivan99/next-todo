@@ -6,7 +6,7 @@ import { Task } from "../types/types";
 export const useGetTasks = () => {
   const { data, error } = useSWR(["/tasks", "GET"], fetcher);
 
-  const tasks: Task[] = data.data;
+  const tasks: Task[] = data?.data;
 
   return {
     tasks,
