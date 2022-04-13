@@ -4,82 +4,83 @@ import jwt from "jsonwebtoken";
 import fs from "fs";
 import { NextApiRequest, NextApiResponse, NextApiHandler } from "next";
 
-type User = {
-  id: string;
-  email: string;
-  password: string;
-};
+import { User } from "../../types/types";
 
 const handler: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
-  if (req.method === "POST") {
-    const { email, password } = req.body;
+  if (req.method !== "POST") {
+    return res.status(400).json({
+      status: "fail",
+      message: "Only POST is allowed!",
+    });
+  }
 
-    if (!email) {
-      return res.status(400).json({
-        status: "error",
-        message: "Email is required.",
-      });
-    }
+  const { email, password } = req.body;
 
-    if (!password) {
-      return res.status(400).json({
-        status: "error",
-        message: "Password is required.",
-      });
-    }
+  if (!email) {
+    return res.status(400).json({
+      status: "error",
+      message: "Email is required.",
+    });
+  }
 
-    const usersData = fs.readFileSync("database/users.json", "utf-8");
-    const users = JSON.parse(usersData);
+  if (!password) {
+    return res.status(400).json({
+      status: "error",
+      message: "Password is required.",
+    });
+  }
 
-    const user = users.find((u: User) => u.email === email);
+  const usersData = fs.readFileSync("database/users.json", "utf-8");
+  const users = JSON.parse(usersData);
 
-    if (!user) {
-      return res.status(401).json({
-        status: "fail",
-        message: "User doesn't exist.",
-      });
-    }
+  const user = users.find((u: User) => u.email === email);
 
-    if (bcrypt.compareSync(password, user.password)) {
-      const token = jwt.sign(
-        {
-          id: user.id,
-          email: user.email,
-          time: Date.now(),
-        },
-        "hello",
-        {
-          expiresIn: "8h",
-        }
-      );
+  if (!user) {
+    return res.status(401).json({
+      status: "fail",
+      message: "User doesn't exist.",
+    });
+  }
 
-      res.setHeader(
-        "Set-Cookie",
-        cookie.serialize("TODO_ACCESS_TOKEN", token, {
-          httpOnly: true,
-          maxAge: 8 * 60 * 60,
-          path: "/",
-          sameSite: "lax",
-          secure: process.env.NODE_ENV === "production",
-        })
-      );
+  if (bcrypt.compareSync(password, user.password)) {
+    const token = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+        time: Date.now(),
+      },
+      "hello",
+      {
+        expiresIn: "8h",
+      }
+    );
 
-      res.status(200).json({
-        status: "success",
-        data: {
-          id: user.id,
-          email: user.email,
-        },
-      });
-    } else {
-      res.status(401).json({
-        status: "fail",
-        message: "Invalid email or password",
-      });
-    }
+    res.setHeader(
+      "Set-Cookie",
+      cookie.serialize("TODO_ACCESS_TOKEN", token, {
+        httpOnly: true,
+        maxAge: 8 * 60 * 60,
+        path: "/",
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+      })
+    );
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        id: user.id,
+        email: user.email,
+      },
+    });
+  } else {
+    res.status(401).json({
+      status: "fail",
+      message: "Invalid email or password",
+    });
   }
 };
 

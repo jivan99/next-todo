@@ -1,11 +1,24 @@
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
+import { v4 as uuidv4 } from "uuid";
 import fs from "fs";
 
-import { v4 as uuidv4 } from "uuid";
+import protectRoute from "../../../middleware/protectRoute";
 
-const handler: NextApiHandler = (req: NextApiRequest, res: NextApiResponse) => {
+import { NextApiRequestWithUser } from "../../../types/types";
+
+const handler: NextApiHandler = (
+  req: NextApiRequestWithUser,
+  res: NextApiResponse
+) => {
   const tasksData = fs.readFileSync("database/tasks.json", "utf-8");
   const tasks = JSON.parse(tasksData);
+
+  if (req.method !== "GET" && req.method !== "POST") {
+    return res.status(400).json({
+      status: "fail",
+      message: "Only GET & POST is allowed!",
+    });
+  }
 
   // ⭐️ GET ALL TASKS ⭐️ //
   if (req.method === "GET") {
@@ -44,4 +57,4 @@ const handler: NextApiHandler = (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default handler;
+export default protectRoute(handler);

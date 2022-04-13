@@ -1,6 +1,8 @@
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import fs from "fs";
 
+import protectRoute from "../../../middleware/protectRoute";
+
 type Task = {
   id: string;
   description: string;
@@ -8,6 +10,17 @@ type Task = {
 };
 
 const handler: NextApiHandler = (req: NextApiRequest, res: NextApiResponse) => {
+  if (
+    req.method !== "GET" &&
+    req.method !== "PATCH" &&
+    req.method !== "DELETE"
+  ) {
+    return res.status(400).json({
+      status: "fail",
+      message: "Only GET & POST is allowed!",
+    });
+  }
+
   const tasksData = fs.readFileSync("database/tasks.json", "utf-8");
   let tasks = JSON.parse(tasksData);
 
@@ -65,4 +78,4 @@ const handler: NextApiHandler = (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default handler;
+export default protectRoute(handler);
