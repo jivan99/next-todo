@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { Task } from "../types/types";
+import fetcher from "../lib/fetcher";
 
 type Props = {
   task: Task;
@@ -9,6 +10,14 @@ type Props = {
 const Task = ({ task }: Props) => {
   const { id, description, completed } = task;
   const [checked, setChecked] = useState(completed);
+
+  const handleDelete = () => {
+    fetcher(`/tasks/${id}`, "DELETE");
+  };
+
+  const handleUpdate = (completed: boolean) => {
+    fetcher(`/tasks/${id}`, "PATCH", { completed });
+  };
 
   return (
     <div className="flex justify-between" key={id}>
@@ -20,7 +29,9 @@ const Task = ({ task }: Props) => {
           type="checkbox"
           checked={checked}
           onChange={(e) => {
-            setChecked(e.target.checked);
+            const { checked } = e.target;
+            setChecked(checked);
+            handleUpdate(checked);
           }}
         />
         <label
@@ -30,7 +41,10 @@ const Task = ({ task }: Props) => {
           {description}
         </label>
       </div>
-      <button className="w-8 h-8 rounded-full bg-red-700 hover:bg-red-600 transition duration-300 flex items-center justify-center">
+      <button
+        className="w-8 h-8 rounded-full bg-red-700 hover:bg-red-600 transition duration-300 flex items-center justify-center"
+        onClick={handleDelete}
+      >
         <svg
           className="w-4 h-4 fill-gray-300"
           version="1.1"
