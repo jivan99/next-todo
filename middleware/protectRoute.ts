@@ -30,6 +30,8 @@ const protectRoute = (handler: NextApiHandler) => {
         });
       }
 
+      delete user.password;
+
       req.user = user;
 
       return handler(req, res);
