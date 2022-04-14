@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import fetcher from "../lib/fetcher";
 
 const Home: NextPage = () => {
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState<any[]>([]);
 
   useEffect(() => {
     fetchTodos();
